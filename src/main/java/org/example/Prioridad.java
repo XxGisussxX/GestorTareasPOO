@@ -3,11 +3,20 @@ package org.example;
 public enum Prioridad {
     INMEDIATO("Inmediato"),
     IMPORTANTE("Importante"),
-    CONTIEMPO("Contiempo");
+    CONTIEMPO("Con tiempo");
 
     private final String descripcion;
 
     private Prioridad(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    @Override
+    public String toString() {
+        return descripcion;
     }
 }
