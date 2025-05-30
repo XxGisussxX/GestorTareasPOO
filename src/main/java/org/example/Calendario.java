@@ -6,17 +6,54 @@ import java.util.List;
 
 public class Calendario {
     private List<Tarea> tareas;
+    private String archivoTareas; // Archivo donde se guardan las tareas
 
     public Calendario() {
         this.tareas = new ArrayList<>();
+        this.archivoTareas = null; // Se asignará cuando se asocie con un usuario
     }
 
+    public Calendario(String archivoTareas) {
+        this.tareas = new ArrayList<>();
+        this.archivoTareas = archivoTareas;
+        cargarTareasDesdeArchivo();
+    }
+
+    // Métodos de persistencia
+    public void setArchivoTareas(String archivoTareas) {
+        this.archivoTareas = archivoTareas;
+        cargarTareasDesdeArchivo();
+    }
+
+    public void cargarTareasDesdeArchivo() {
+        if (archivoTareas != null) {
+            List<Tarea> tareasCargadas = ArchivoManager.cargarTareas(archivoTareas);
+            this.tareas.clear();
+            this.tareas.addAll(tareasCargadas);
+        }
+    }
+
+    public void guardarTareasEnArchivo() {
+        if (archivoTareas != null) {
+            ArchivoManager.guardarTareas(tareas, archivoTareas);
+        }
+    }
+
+    public void crearBackup() {
+        if (archivoTareas != null) {
+            ArchivoManager.crearBackupTareas(archivoTareas);
+        }
+    }
+
+    // Métodos existentes con persistencia automática
     public List<Tarea> getTareas() {
         return tareas;
     }
 
     public void agregarTarea(Tarea tarea) {
         tareas.add(tarea);
+        guardarTareasEnArchivo(); // Guardar automáticamente
+        System.out.println("💾 Tarea guardada automáticamente.");
     }
 
     public List<Tarea> buscarTarea(String nombre, int id) {
@@ -34,6 +71,8 @@ public class Calendario {
             if (tarea.getId() == id) {
                 tarea.setNombre(nuevoNombre);
                 tarea.setDescripcion(nuevaDescripcion);
+                guardarTareasEnArchivo(); // Guardar cambios
+                System.out.println("💾 Cambios guardados automáticamente.");
                 return true; // Tarea modificada exitosamente
             }
         }
@@ -44,6 +83,8 @@ public class Calendario {
         for (int i = 0; i < tareas.size(); i++) {
             if (tareas.get(i).getId() == id) {
                 tareas.remove(i);
+                guardarTareasEnArchivo(); // Guardar cambios
+                System.out.println("💾 Eliminación guardada automáticamente.");
                 return true; // Tarea eliminada exitosamente
             }
         }
@@ -84,6 +125,20 @@ public class Calendario {
         for (Tarea tarea : tareas) {
             if (tarea.getId() == id) {
                 tarea.marcarComoHecho();
+                guardarTareasEnArchivo(); // Guardar cambios
+                System.out.println("💾 Estado actualizado y guardado automáticamente.");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean marcarTareaEnProceso(int id) {
+        for (Tarea tarea : tareas) {
+            if (tarea.getId() == id) {
+                tarea.marcarEnProceso();
+                guardarTareasEnArchivo(); // Guardar cambios
+                System.out.println("💾 Estado actualizado y guardado automáticamente.");
                 return true;
             }
         }
@@ -97,6 +152,7 @@ public class Calendario {
         }
 
         System.out.println("\n📋 === LISTADO DE TAREAS ===");
+        System.out.println("📄 Archivo: " + (archivoTareas != null ? archivoTareas : "Sin archivo"));
         for (Tarea tarea : tareas) {
             System.out.println(tarea);
             System.out.println("─".repeat(50));
@@ -115,5 +171,25 @@ public class Calendario {
             }
         }
         return contador;
+    }
+
+    // Métodos adicionales para gestión avanzada
+    public void sincronizarConArchivo() {
+        System.out.println("🔄 Sincronizando con archivo...");
+        cargarTareasDesdeArchivo();
+        System.out.println("✅ Sincronización completada.");
+    }
+
+    public void mostrarInformacionArchivo() {
+        if (archivoTareas != null) {
+            System.out.println("📄 Archivo de tareas: " + archivoTareas);
+            ArchivoManager.mostrarEstadisticasArchivo(archivoTareas);
+        } else {
+            System.out.println("⚠️ No hay archivo de tareas asignado.");
+        }
+    }
+
+    public String getArchivoTareas() {
+        return archivoTareas;
     }
 }

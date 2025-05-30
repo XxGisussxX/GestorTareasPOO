@@ -44,6 +44,13 @@ public class Tarea {
         this.estado = Estado.ENPROCESO;
     }
 
+    // Método estático para actualizar el contador de ID (útil al cargar desde archivo)
+    public static void actualizarContadorId(int nuevoContador) {
+        if (nuevoContador > contadorId) {
+            contadorId = nuevoContador;
+        }
+    }
+
     // Getters
     public int getId() {
         return id;
@@ -78,6 +85,12 @@ public class Tarea {
     }
 
     // Setters
+    public void setId(int id) {
+        this.id = id;
+        // Actualizar el contador si es necesario
+        actualizarContadorId(id + 1);
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
