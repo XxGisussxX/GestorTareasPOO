@@ -1,6 +1,11 @@
 # Proyecto 2: Gestor de Tareas Personales
 
 ---
+## Participantes
+
+-Diego Beltrán
+-Andrea Arenas
+-Jesus Santamaria
 
 ## Enunciado
 
@@ -25,3 +30,4 @@ Crea una aplicación donde el usuario registre tareas con nombre, prioridad, fec
 3. Implementación de filtros y estrategias de ordenamiento
 4. Guardado/carga en archivo (JSON o binario)
 5. Validaciones, estética y documentación
+
